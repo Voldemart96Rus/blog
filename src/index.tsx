@@ -1,15 +1,15 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import {Provider} from 'react-redux';
 import 'react-app-polyfill/ie11';
 import 'react-app-polyfill/stable';
 
-import './index.css';
-
-import App from './App';
+import App from './components/App';
+import store from './store';
 
 ReactDOM.render(
-    <React.StrictMode>
+    <Provider store={store}>
         <App />
-    </React.StrictMode>,
+    </Provider>,
     document.getElementById('root')
 );
