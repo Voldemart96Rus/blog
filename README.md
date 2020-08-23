@@ -30,4 +30,4 @@
 Задача бонус 2.
 Создание и редактирование постов.
 
-Стек технологий: React, Redux, TypeScript.
+Стек технологий: React, Redux, TypeScript, Bootstrap.
