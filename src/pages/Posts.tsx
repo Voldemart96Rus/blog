@@ -51,7 +51,10 @@ const Posts: React.FC<PropType> = ({
                 </thead>
                 <tbody>
                     {posts.map((post: IPost, index: number) => (
-                        <tr onClick={() => history.push(`/posts/${post.id}`)}>
+                        <tr
+                            key={post.id}
+                            onClick={() => history.push(`/posts/${post.id}`)}
+                        >
                             <td>
                                 {index + (activePage - 1) * posts.length + 1}
                             </td>

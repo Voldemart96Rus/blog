@@ -16,8 +16,8 @@ type PropType = RouteComponentProps & {
     activePage: number;
     history: History;
     getUsers: (page: number) => void;
-    setUsersPage: (page: number) => void;
     cleanUsers: () => void;
+    setUsersPage: (page: number) => void;
 };
 
 const Users: React.FC<PropType> = ({
@@ -37,7 +37,6 @@ const Users: React.FC<PropType> = ({
         };
     }, [activePage, getUsers, cleanUsers]);
 
-    // <Preloader />
     return loading ? (
         <main>Loading...</main>
     ) : (
@@ -52,7 +51,10 @@ const Users: React.FC<PropType> = ({
                 </thead>
                 <tbody>
                     {users.map((user: IUser, index: number) => (
-                        <tr onClick={() => history.push(`/users/${user.id}`)}>
+                        <tr
+                            key={user.id}
+                            onClick={() => history.push(`/users/${user.id}`)}
+                        >
                             <td>
                                 {index + (activePage - 1) * users.length + 1}
                             </td>
@@ -87,7 +89,7 @@ const mapStateToProps = (state: IStoreState) => ({
     users: state.user.users,
     pagination: state.user.pagination,
     loading: state.user.loading,
-    activePage: state.post.page,
+    activePage: state.user.page,
 });
 
 export default connect(mapStateToProps, {

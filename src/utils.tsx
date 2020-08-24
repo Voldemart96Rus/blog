@@ -21,6 +21,7 @@ export const getPaginationItems = (
         for (let i = 1; i <= pages; i++) {
             paginationItems.push(
                 <Pagination.Item
+                    key={i}
                     onClick={() => setActivePage(i)}
                     active={i === activePage}
                 >
@@ -41,6 +42,7 @@ export const getPaginationItems = (
         if (1 <= i && i <= pages) {
             paginationItems.push(
                 <Pagination.Item
+                    key={i}
                     onClick={() => setActivePage(i)}
                     active={i === activePage}
                 >
@@ -72,6 +74,7 @@ export const getPaginationItems = (
         for (let i = start; i <= end; i++) {
             additionalPages.push(
                 <Pagination.Item
+                    key={i}
                     onClick={() => setActivePage(i)}
                     active={i === activePage}
                 >
@@ -106,11 +109,13 @@ export const getPaginationItems = (
 
     if (!takenPageNumbers.includes(pages)) {
         if (pages - rightmostPageNumber > 1) {
-            paginationItems.push(<Pagination.Ellipsis />);
+            paginationItems.push(
+                <Pagination.Ellipsis key={Date.now().valueOf()} />
+            );
         }
 
         paginationItems.push(
-            <Pagination.Item onClick={() => setActivePage(pages)}>
+            <Pagination.Item key={pages} onClick={() => setActivePage(pages)}>
                 {pages}
             </Pagination.Item>
         );

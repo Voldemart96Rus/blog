@@ -7,6 +7,7 @@ export const CLEAN_USERS = 'CLEAN_USERS';
 export const CLEAN_POSTS = 'CLEAN_POSTS';
 export const SET_USERS_PAGE = 'SET_USERS_PAGE';
 export const SET_POSTS_PAGE = 'SET_POSTS_PAGE';
+export const SET_TOKEN = 'SET_TOKEN';
 
 export interface IPost {
     id: string;
@@ -45,9 +46,14 @@ export interface IUserState {
     loading: boolean;
 }
 
+export interface IAuthState {
+    token: string | null;
+}
+
 export interface IStoreState {
     post: IPostState;
     user: IUserState;
+    auth: IAuthState;
 }
 
 export interface GetUserAction {
@@ -92,6 +98,11 @@ export interface SetPostsPageAction {
     payload: number;
 }
 
+export interface SetTokenAction {
+    type: typeof SET_TOKEN;
+    payload: string;
+}
+
 export type UserActionTypes =
     | GetUserAction
     | GetUsersAction
@@ -105,3 +116,5 @@ export type PostActionTypes =
     | CleanPostsAction
     | SetLoadingAction
     | SetPostsPageAction;
+
+export type AuthActionTypes = SetTokenAction;
