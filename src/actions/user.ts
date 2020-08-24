@@ -1,5 +1,5 @@
 import {BASE_URL} from '../constants';
-import {GET_USER, GET_USERS, SET_LOADING} from '../actions/types';
+import {GET_USER, GET_USERS, SET_LOADING, GET_POSTS} from '../actions/types';
 
 export const getUsers = (page: number) => (dispatch: any) => {
     const url = `${BASE_URL}/users?page=${page}`;

@@ -3,17 +3,35 @@ import {connect} from 'react-redux';
 import Table from 'react-bootstrap/Table';
 
 import {getUsers} from '../actions/user';
+import {getUserPosts} from '../actions/post';
+
+// interface I {
+//     id: string;
+// }
+
+// interface T extends EventTarget {
+//     id: string;
+// }
+
+// interface M {
+//     target: EventTarget & I;
+// }
 
 interface IProps {
     users: any;
     loading: boolean;
     getUsers: (page: number) => void;
+    getUserPosts: (id: string) => void;
 }
 
-const Home: React.FC<IProps> = ({users, loading, getUsers}) => {
+const Home: React.FC<IProps> = ({users, loading, getUsers, getUserPosts}) => {
     useEffect(() => {
         getUsers(1);
     }, []);
+
+    const clickUser = (e: any): void => {
+        if (e) getUserPosts(e.target.id);
+    };
 
     // <Preloader />
     return loading ? (
@@ -28,12 +46,12 @@ const Home: React.FC<IProps> = ({users, loading, getUsers}) => {
                         <th>Email</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody onClick={clickUser}>
                     {users.map((user: any, index: number) => (
-                        <tr>
-                            <td>{index + 1}</td>
-                            <td>{user.name}</td>
-                            <td>{user.email}</td>
+                        <tr className="pointer" key={user.id} id={user.id}>
+                            <td id={user.id}>{index + 1}</td>
+                            <td id={user.id}>{user.name}</td>
+                            <td id={user.id}>{user.email}</td>
                         </tr>
                     ))}
                 </tbody>
@@ -47,4 +65,4 @@ const mapStateToProps = (state: any) => ({
     loading: state.user.loading,
 });
 
-export default connect(mapStateToProps, {getUsers})(Home);
+export default connect(mapStateToProps, {getUsers, getUserPosts})(Home);

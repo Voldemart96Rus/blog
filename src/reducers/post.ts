@@ -1,4 +1,4 @@
-import {SET_LOADING} from '../actions/types';
+import {SET_LOADING, GET_POSTS} from '../actions/types';
 
 const initialState: any = {
     posts: [],
@@ -9,6 +9,13 @@ const initialState: any = {
 
 export default (state = initialState, action: any) => {
     switch (action.type) {
+        case GET_POSTS: {
+            console.info(action);
+            return {
+                ...state,
+                posts: action.payload,
+            };
+        }
         case SET_LOADING:
             return {
                 ...state,
