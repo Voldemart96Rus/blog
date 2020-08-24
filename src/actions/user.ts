@@ -1,5 +1,11 @@
 import {BASE_URL} from '../constants';
-import {GET_USER, GET_USERS, GET_PAGINATION_DATA, SET_LOADING} from '../types';
+import {
+    GET_USER,
+    GET_USERS,
+    GET_PAGINATION_DATA,
+    SET_LOADING,
+    CLEAN_USERS,
+} from '../types';
 
 export const getUsers = (page: number) => (dispatch: any) => {
     dispatch(setLoading());
@@ -55,5 +61,7 @@ export const getUserPagination = () => (dispatch: any) => {
         })
         .catch((error) => console.error(error));
 };
+
+export const cleanUsers = () => ({type: CLEAN_USERS});
 
 export const setLoading = () => ({type: SET_LOADING});

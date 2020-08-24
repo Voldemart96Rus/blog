@@ -32,7 +32,7 @@ const GENDER_MAP: any = {
 const User: React.FC<IProps> = ({match, user, loading, getUser}) => {
     useEffect(() => {
         getUser(match.params.id);
-    }, []);
+    }, [getUser, match.params.id]);
 
     // <Preloader />
     return loading || user === null ? (

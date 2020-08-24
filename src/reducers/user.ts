@@ -1,5 +1,11 @@
-import {GET_USER, GET_USERS, SET_LOADING, GET_PAGINATION_DATA} from '../types';
-import {IUserState} from '../types';
+import {
+    GET_USER,
+    GET_USERS,
+    SET_LOADING,
+    GET_PAGINATION_DATA,
+    CLEAN_USERS,
+} from '../types';
+import {IUserState, UserActionTypes} from '../types';
 
 const initialState: IUserState = {
     users: [],
@@ -11,7 +17,7 @@ const initialState: IUserState = {
     loading: false,
 };
 
-export default (state = initialState, action: any) => {
+export default (state = initialState, action: UserActionTypes) => {
     switch (action.type) {
         case GET_USERS: {
             return {
@@ -24,6 +30,13 @@ export default (state = initialState, action: any) => {
             return {
                 ...state,
                 user: action.payload,
+                loading: false,
+            };
+        }
+        case CLEAN_USERS: {
+            return {
+                ...state,
+                users: [],
                 loading: false,
             };
         }

@@ -13,8 +13,10 @@ interface IProps {
 
 const Posts: React.FC<IProps> = ({posts, loading, getPosts}) => {
     useEffect(() => {
+        // eslint-disable-next-line
         getPosts(1);
         // todo cleanup
+        // eslint-disable-next-line
     }, []);
 
     // <Preloader />

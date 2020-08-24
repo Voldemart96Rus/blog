@@ -4,6 +4,7 @@ export const GET_USERS = 'GET_USERS';
 export const GET_POST = 'GET_POST';
 export const GET_POSTS = 'GET_POSTS';
 export const GET_PAGINATION_DATA = 'GET_PAGINATION_DATA';
+export const CLEAN_USERS = 'CLEAN_USERS';
 
 export interface IPost {
     id: string;
@@ -68,5 +69,19 @@ export interface SetLoadingAction {
     payload: boolean;
 }
 
-export type UserActionTypes = GetUserAction | GetUsersAction | SetLoadingAction;
+export interface GetPaginationDataAction {
+    type: typeof GET_PAGINATION_DATA;
+    payload: IPagination;
+}
+
+export interface CleanUsersAction {
+    type: typeof CLEAN_USERS;
+}
+
+export type UserActionTypes =
+    | GetUserAction
+    | GetUsersAction
+    | CleanUsersAction
+    | SetLoadingAction
+    | GetPaginationDataAction;
 export type PostActionTypes = GetPostAction | GetPostsAction | SetLoadingAction;
