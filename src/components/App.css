@@ -9,3 +9,9 @@ body {
 .pointer {
     cursor: pointer;
 }
+
+.main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}

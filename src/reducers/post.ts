@@ -1,19 +1,26 @@
-import {SET_LOADING, GET_POSTS} from '../actions/types';
+import {GET_POST, GET_POSTS, SET_LOADING} from '../types';
+import {IPostState, PostActionTypes} from '../types';
 
-const initialState: any = {
+const initialState: IPostState = {
     posts: [],
     post: null,
     loading: false,
-    errors: [],
 };
 
-export default (state = initialState, action: any) => {
+export default (state = initialState, action: PostActionTypes) => {
     switch (action.type) {
+        case GET_POST: {
+            return {
+                ...state,
+                post: action.payload,
+                loading: false,
+            };
+        }
         case GET_POSTS: {
-            console.info(action);
             return {
                 ...state,
                 posts: action.payload,
+                loading: false,
             };
         }
         case SET_LOADING:

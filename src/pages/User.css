@@ -1,0 +1,30 @@
+.user-card {
+    width: fit-content;
+}
+
+.user-card-header {
+    display: flex;
+    align-items: center;
+}
+
+.user-icon {
+    width: 2rem;
+    height: 2rem;
+    margin-right: 3rem;
+}
+
+.username {
+    margin-right: 3rem;
+}
+
+.user-status {
+    margin-left: auto;
+}
+
+.user-definition-group {
+    display: flex;
+}
+
+.user-definition-term {
+    min-width: 4rem;
+}

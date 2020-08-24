@@ -1,8 +1,13 @@
-import {GET_USER, GET_USERS, SET_LOADING} from '../actions/types';
+import {GET_USER, GET_USERS, SET_LOADING, GET_PAGINATION_DATA} from '../types';
+import {IUserState} from '../types';
 
-const initialState: any = {
+const initialState: IUserState = {
     users: [],
     user: null,
+    pagination: {
+        total: 0,
+        pages: 0,
+    },
     loading: false,
 };
 
@@ -19,6 +24,13 @@ export default (state = initialState, action: any) => {
             return {
                 ...state,
                 user: action.payload,
+                loading: false,
+            };
+        }
+        case GET_PAGINATION_DATA: {
+            return {
+                ...state,
+                pagination: action.payload,
                 loading: false,
             };
         }

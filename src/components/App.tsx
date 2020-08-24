@@ -20,8 +20,8 @@ const App: React.FC = () => {
                 <Switch>
                     <Route exact path="/users" component={Users} />
                     <Route exact path="/posts" component={Posts} />
-                    <Route exact path="/user/:id" component={User} />
-                    <Route exact path="/post/:id" component={Post} />
+                    <Route exact path="/users/:id" component={User} />
+                    <Route exact path="/posts/:id" component={Post} />
                     <Route component={NotFound} />
                 </Switch>
             </Container>

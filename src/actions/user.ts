@@ -1,10 +1,10 @@
 import {BASE_URL} from '../constants';
-import {GET_USER, GET_USERS, SET_LOADING, GET_POSTS} from '../actions/types';
+import {GET_USER, GET_USERS, GET_PAGINATION_DATA, SET_LOADING} from '../types';
 
 export const getUsers = (page: number) => (dispatch: any) => {
-    const url = `${BASE_URL}/users?page=${page}`;
-
     dispatch(setLoading());
+
+    const url = `${BASE_URL}/users?page=${page}`;
 
     fetch(url)
         .then((res) => res.json())
@@ -22,9 +22,9 @@ export const getUsers = (page: number) => (dispatch: any) => {
 };
 
 export const getUser = (id: string) => (dispatch: any) => {
-    const url = `${BASE_URL}/users/${id}`;
-
     dispatch(setLoading());
+
+    const url = `${BASE_URL}/users/${id}`;
 
     fetch(url)
         .then((res) => res.json())
@@ -32,6 +32,25 @@ export const getUser = (id: string) => (dispatch: any) => {
             dispatch({
                 type: GET_USER,
                 payload: data,
+            });
+        })
+        .catch((error) => console.error(error));
+};
+
+export const getUserPagination = () => (dispatch: any) => {
+    dispatch(setLoading());
+
+    const url = `${BASE_URL}/users`;
+
+    fetch(url)
+        .then((res) => res.json())
+        .then(({meta}) => {
+            dispatch({
+                type: GET_PAGINATION_DATA,
+                payload: {
+                    total: meta.pagination.total,
+                    pages: meta.pagination.pages,
+                },
             });
         })
         .catch((error) => console.error(error));
