@@ -6,8 +6,7 @@ import Pagination from 'react-bootstrap/Pagination';
 import Table from 'react-bootstrap/Table';
 
 import {IUser, IStoreState, IPagination} from '../types';
-import {getUsers, getUserPagination, cleanUsers} from '../actions/user';
-import {ITEM_COUNT_PER_PAGE} from '../constants';
+import {getUsers, cleanUsers} from '../actions/user';
 import {getPaginationItems} from '../utils';
 
 type PropType = RouteComponentProps & {
@@ -16,24 +15,18 @@ type PropType = RouteComponentProps & {
     loading: boolean;
     history: History;
     getUsers: (page: number) => void;
-    getUserCount: () => void;
     cleanUsers: () => void;
 };
 
 const Users: React.FC<PropType> = ({
     users,
-    pagination: {total, pages},
+    pagination: {total, pages, limit},
     loading,
     history,
     getUsers,
-    getUserCount,
     cleanUsers,
 }) => {
     const [activePage, setActivePage] = useState(1);
-
-    useEffect(() => {
-        getUserCount();
-    }, [getUserCount]);
 
     useEffect(() => {
         getUsers(activePage);
@@ -67,7 +60,7 @@ const Users: React.FC<PropType> = ({
                     ))}
                 </tbody>
             </Table>
-            {total > ITEM_COUNT_PER_PAGE && (
+            {total > limit && (
                 <Pagination>
                     <Pagination.First onClick={() => setActivePage(1)} />
                     <Pagination.Prev
@@ -96,6 +89,5 @@ const mapStateToProps = (state: IStoreState) => ({
 
 export default connect(mapStateToProps, {
     getUsers,
-    getUserCount: getUserPagination,
     cleanUsers,
 })(withRouter(Users));

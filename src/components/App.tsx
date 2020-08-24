@@ -1,5 +1,10 @@
 import React from 'react';
-import {BrowserRouter as Router, Route, Switch} from 'react-router-dom';
+import {
+    BrowserRouter as Router,
+    Route,
+    Switch,
+    Redirect,
+} from 'react-router-dom';
 import {connect} from 'react-redux';
 import Container from 'react-bootstrap/Container';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -18,6 +23,11 @@ const App: React.FC = () => {
             <Header />
             <Container className="page-container">
                 <Switch>
+                    <Route
+                        exact
+                        path="/"
+                        render={() => <Redirect to="/users" />}
+                    />
                     <Route exact path="/users" component={Users} />
                     <Route exact path="/posts" component={Posts} />
                     <Route exact path="/users/:id" component={User} />

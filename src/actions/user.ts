@@ -2,33 +2,44 @@ import {BASE_URL} from '../constants';
 import {
     GET_USER,
     GET_USERS,
-    GET_PAGINATION_DATA,
     SET_LOADING,
     CLEAN_USERS,
+    SetLoadingAction,
+    CleanUsersAction,
+    GetUserAction,
+    GetUsersAction,
 } from '../types';
+import {Dispatch} from 'react';
 
-export const getUsers = (page: number) => (dispatch: any) => {
-    dispatch(setLoading());
+export const getUsers = (page: number) => (
+    dispatch: Dispatch<SetLoadingAction | GetUsersAction>
+) => {
+    dispatch(setLoading);
 
     const url = `${BASE_URL}/users?page=${page}`;
 
     fetch(url)
         .then((res) => res.json())
-        .then(({data}) => {
+        .then(({meta: {pagination}, data}) => {
             dispatch({
                 type: GET_USERS,
-                payload: data.map(({id, name, email}: any) => ({
-                    id,
-                    name,
-                    email,
-                })),
+                payload: {
+                    users: data.map(({id, name, email}: any) => ({
+                        id,
+                        name,
+                        email,
+                    })),
+                    pagination,
+                },
             });
         })
         .catch((error) => console.error(error));
 };
 
-export const getUser = (id: string) => (dispatch: any) => {
-    dispatch(setLoading());
+export const getUser = (id: string) => (
+    dispatch: Dispatch<SetLoadingAction | GetUserAction>
+) => {
+    dispatch(setLoading);
 
     const url = `${BASE_URL}/users/${id}`;
 
@@ -43,25 +54,9 @@ export const getUser = (id: string) => (dispatch: any) => {
         .catch((error) => console.error(error));
 };
 
-export const getUserPagination = () => (dispatch: any) => {
-    dispatch(setLoading());
+export const cleanUsers = () => (dispatch: Dispatch<CleanUsersAction>) =>
+    dispatch({type: CLEAN_USERS});
 
-    const url = `${BASE_URL}/users`;
-
-    fetch(url)
-        .then((res) => res.json())
-        .then(({meta}) => {
-            dispatch({
-                type: GET_PAGINATION_DATA,
-                payload: {
-                    total: meta.pagination.total,
-                    pages: meta.pagination.pages,
-                },
-            });
-        })
-        .catch((error) => console.error(error));
+const setLoading: SetLoadingAction = {
+    type: SET_LOADING,
 };
-
-export const cleanUsers = () => ({type: CLEAN_USERS});
-
-export const setLoading = () => ({type: SET_LOADING});

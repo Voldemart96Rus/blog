@@ -1,24 +1,39 @@
-import {BASE_URL} from '../constants';
-import {GET_POSTS, GET_POST, SET_LOADING} from '../types';
+import {Dispatch} from 'react';
 
-export const getPosts = (page: number) => (dispatch: any) => {
-    dispatch(setLoading());
+import {BASE_URL} from '../constants';
+import {
+    GET_POSTS,
+    GET_POST,
+    SET_LOADING,
+    CLEAN_POSTS,
+    SetLoadingAction,
+    CleanPostsAction,
+    GetPostAction,
+    GetPostsAction,
+} from '../types';
+
+export const getPosts = (page: number) => (
+    dispatch: Dispatch<SetLoadingAction | GetPostsAction>
+) => {
+    dispatch(setLoading);
 
     const url = `${BASE_URL}/posts?page=${page}`;
 
     fetch(url)
         .then((res) => res.json())
-        .then(({data}) => {
+        .then(({meta: {pagination}, data}) => {
             dispatch({
                 type: GET_POSTS,
-                payload: data,
+                payload: {pagination, posts: data},
             });
         })
         .catch((error) => console.error(error));
 };
 
-export const getPost = (id: string) => (dispatch: any) => {
-    dispatch(setLoading());
+export const getPost = (id: string) => (
+    dispatch: Dispatch<SetLoadingAction | GetPostAction>
+) => {
+    dispatch(setLoading);
 
     const url = `${BASE_URL}/posts/${id}`;
 
@@ -33,4 +48,7 @@ export const getPost = (id: string) => (dispatch: any) => {
         .catch((error) => console.error(error));
 };
 
-export const setLoading = () => ({type: SET_LOADING});
+export const cleanPosts = () => (dispatch: Dispatch<CleanPostsAction>) =>
+    dispatch({type: CLEAN_POSTS});
+
+const setLoading: SetLoadingAction = {type: SET_LOADING};

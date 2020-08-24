@@ -3,8 +3,8 @@ export const GET_USER = 'GET_USER';
 export const GET_USERS = 'GET_USERS';
 export const GET_POST = 'GET_POST';
 export const GET_POSTS = 'GET_POSTS';
-export const GET_PAGINATION_DATA = 'GET_PAGINATION_DATA';
 export const CLEAN_USERS = 'CLEAN_USERS';
+export const CLEAN_POSTS = 'CLEAN_POSTS';
 
 export interface IPost {
     id: string;
@@ -24,11 +24,13 @@ export interface IUser {
 export interface IPagination {
     total: number;
     pages: number;
+    limit: number;
 }
 
 export interface IPostState {
     posts: IPost[];
     post: IPost | null;
+    pagination: IPagination;
     loading: boolean;
 }
 
@@ -51,7 +53,7 @@ export interface GetUserAction {
 
 export interface GetUsersAction {
     type: typeof GET_USERS;
-    payload: IUser[];
+    payload: {users: IUser[]; pagination: IPagination};
 }
 
 export interface GetPostAction {
@@ -61,27 +63,29 @@ export interface GetPostAction {
 
 export interface GetPostsAction {
     type: typeof GET_POSTS;
-    payload: IPost[];
+    payload: {posts: IPost[]; pagination: IPagination};
 }
 
 export interface SetLoadingAction {
     type: typeof SET_LOADING;
-    payload: boolean;
-}
-
-export interface GetPaginationDataAction {
-    type: typeof GET_PAGINATION_DATA;
-    payload: IPagination;
 }
 
 export interface CleanUsersAction {
     type: typeof CLEAN_USERS;
 }
 
+export interface CleanPostsAction {
+    type: typeof CLEAN_POSTS;
+}
+
 export type UserActionTypes =
     | GetUserAction
     | GetUsersAction
     | CleanUsersAction
-    | SetLoadingAction
-    | GetPaginationDataAction;
-export type PostActionTypes = GetPostAction | GetPostsAction | SetLoadingAction;
+    | SetLoadingAction;
+
+export type PostActionTypes =
+    | GetPostAction
+    | GetPostsAction
+    | CleanPostsAction
+    | SetLoadingAction;

@@ -2,10 +2,10 @@ import {
     GET_USER,
     GET_USERS,
     SET_LOADING,
-    GET_PAGINATION_DATA,
     CLEAN_USERS,
+    IUserState,
+    UserActionTypes,
 } from '../types';
-import {IUserState, UserActionTypes} from '../types';
 
 const initialState: IUserState = {
     users: [],
@@ -13,6 +13,7 @@ const initialState: IUserState = {
     pagination: {
         total: 0,
         pages: 0,
+        limit: 20,
     },
     loading: false,
 };
@@ -22,7 +23,8 @@ export default (state = initialState, action: UserActionTypes) => {
         case GET_USERS: {
             return {
                 ...state,
-                users: action.payload,
+                users: action.payload.users,
+                pagination: action.payload.pagination,
                 loading: false,
             };
         }
@@ -37,13 +39,6 @@ export default (state = initialState, action: UserActionTypes) => {
             return {
                 ...state,
                 users: [],
-                loading: false,
-            };
-        }
-        case GET_PAGINATION_DATA: {
-            return {
-                ...state,
-                pagination: action.payload,
                 loading: false,
             };
         }
