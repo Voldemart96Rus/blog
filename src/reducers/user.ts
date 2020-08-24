@@ -2,6 +2,7 @@ import {
     GET_USER,
     GET_USERS,
     SET_LOADING,
+    SET_USERS_PAGE,
     CLEAN_USERS,
     IUserState,
     UserActionTypes,
@@ -10,6 +11,7 @@ import {
 const initialState: IUserState = {
     users: [],
     user: null,
+    page: 1,
     pagination: {
         total: 0,
         pages: 0,
@@ -32,6 +34,13 @@ export default (state = initialState, action: UserActionTypes) => {
             return {
                 ...state,
                 user: action.payload,
+                loading: false,
+            };
+        }
+        case SET_USERS_PAGE: {
+            return {
+                ...state,
+                page: action.payload,
                 loading: false,
             };
         }

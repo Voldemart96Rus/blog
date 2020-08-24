@@ -4,10 +4,12 @@ import {
     GET_USERS,
     SET_LOADING,
     CLEAN_USERS,
+    SET_USERS_PAGE,
     SetLoadingAction,
     CleanUsersAction,
     GetUserAction,
     GetUsersAction,
+    SetUsersPageAction,
 } from '../types';
 import {Dispatch} from 'react';
 
@@ -52,6 +54,15 @@ export const getUser = (id: string) => (
             });
         })
         .catch((error) => console.error(error));
+};
+
+export const setUsersPage = (page: number) => (
+    dispatch: Dispatch<SetUsersPageAction>
+) => {
+    dispatch({
+        type: SET_USERS_PAGE,
+        payload: page,
+    });
 };
 
 export const cleanUsers = () => (dispatch: Dispatch<CleanUsersAction>) =>

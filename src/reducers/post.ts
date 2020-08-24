@@ -3,6 +3,7 @@ import {
     GET_POSTS,
     SET_LOADING,
     CLEAN_POSTS,
+    SET_POSTS_PAGE,
     IPostState,
     PostActionTypes,
 } from '../types';
@@ -14,6 +15,7 @@ const initialState: IPostState = {
         pages: 0,
         limit: 20,
     },
+    page: 1,
     post: null,
     loading: false,
 };
@@ -32,6 +34,13 @@ export default (state = initialState, action: PostActionTypes) => {
                 ...state,
                 posts: action.payload.posts,
                 pagination: action.payload.pagination,
+                loading: false,
+            };
+        }
+        case SET_POSTS_PAGE: {
+            return {
+                ...state,
+                page: action.payload,
                 loading: false,
             };
         }

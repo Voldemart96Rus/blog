@@ -6,10 +6,12 @@ import {
     GET_POST,
     SET_LOADING,
     CLEAN_POSTS,
+    SET_POSTS_PAGE,
     SetLoadingAction,
     CleanPostsAction,
     GetPostAction,
     GetPostsAction,
+    SetPostsPageAction,
 } from '../types';
 
 export const getPosts = (page: number) => (
@@ -46,6 +48,15 @@ export const getPost = (id: string) => (
             });
         })
         .catch((error) => console.error(error));
+};
+
+export const setPostsPage = (page: number) => (
+    dispatch: Dispatch<SetPostsPageAction>
+) => {
+    dispatch({
+        type: SET_POSTS_PAGE,
+        payload: page,
+    });
 };
 
 export const cleanPosts = () => (dispatch: Dispatch<CleanPostsAction>) =>
