@@ -2,12 +2,11 @@ import React, {useEffect} from 'react';
 import {History} from 'history';
 import {connect} from 'react-redux';
 import {RouteComponentProps, withRouter} from 'react-router-dom';
-import Pagination from 'react-bootstrap/Pagination';
 import Table from 'react-bootstrap/Table';
 
 import {IUser, IStoreState, IPagination} from '../types';
 import {getUsers, cleanUsers, setUsersPage} from '../actions/user';
-import {getPaginationItems} from '../utils';
+import CustomPagination from '../components/layout/CustomPagination';
 
 // все аналогично posts
 type PropType = RouteComponentProps & {
@@ -67,22 +66,11 @@ const Users: React.FC<PropType> = ({
                 </tbody>
             </Table>
             {total > limit && (
-                // todo в отдельный компонент
-                <Pagination>
-                    <Pagination.First onClick={() => setUsersPage(1)} />
-                    <Pagination.Prev
-                        onClick={() =>
-                            setUsersPage(Math.max(activePage - 1, 1))
-                        }
-                    />
-                    {getPaginationItems(pages, activePage, setUsersPage)}
-                    <Pagination.Next
-                        onClick={() =>
-                            setUsersPage(Math.min(activePage + 1, pages))
-                        }
-                    />
-                    <Pagination.Last onClick={() => setUsersPage(pages)} />
-                </Pagination>
+                <CustomPagination
+                    pages={pages}
+                    activePage={activePage}
+                    setActivePage={setUsersPage}
+                />
             )}
         </main>
     );

@@ -2,12 +2,11 @@ import React, {useEffect} from 'react';
 import {History} from 'history';
 import {connect} from 'react-redux';
 import {RouteComponentProps, withRouter} from 'react-router-dom';
-import Pagination from 'react-bootstrap/Pagination';
-import Table from 'react-bootstrap/Table';
 
 import {IPost, IStoreState, IPagination} from '../types';
 import {getPosts, cleanPosts, setPostsPage} from '../actions/post';
-import {getPaginationItems} from '../utils';
+import CustomPagination from '../components/layout/CustomPagination';
+import PostsTable from '../components/layout/PostsTable';
 
 type PropType = RouteComponentProps & {
     posts: IPost[];
@@ -37,49 +36,23 @@ const Posts: React.FC<PropType> = ({
         };
     }, [activePage, getPosts, cleanPosts]);
 
+    const onPostClick = (id: string) => history.push(`/posts/${id}`);
+
     return loading ? (
         <main>Loading...</main>
     ) : (
         <main className="main">
-            <Table striped bordered hover>
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>Заголовок</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {posts.map((post: IPost, index: number) => (
-                        <tr
-                            key={post.id}
-                            className="cursor-pointer"
-                            onClick={() => history.push(`/posts/${post.id}`)}
-                        >
-                            <td>
-                                {index + (activePage - 1) * posts.length + 1}
-                            </td>
-                            <td>{post.title}</td>
-                        </tr>
-                    ))}
-                </tbody>
-            </Table>
+            <PostsTable
+                posts={posts}
+                activePage={activePage}
+                onClick={onPostClick}
+            />
             {total > limit && (
-                // todo в отдельный компонент
-                <Pagination>
-                    <Pagination.First onClick={() => setPostsPage(1)} />
-                    <Pagination.Prev
-                        onClick={() =>
-                            setPostsPage(Math.max(activePage - 1, 1))
-                        }
-                    />
-                    {getPaginationItems(pages, activePage, setPostsPage)}
-                    <Pagination.Next
-                        onClick={() =>
-                            setPostsPage(Math.min(activePage + 1, pages))
-                        }
-                    />
-                    <Pagination.Last onClick={() => setPostsPage(pages)} />
-                </Pagination>
+                <CustomPagination
+                    pages={pages}
+                    activePage={activePage}
+                    setActivePage={setPostsPage}
+                />
             )}
         </main>
     );
