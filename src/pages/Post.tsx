@@ -1,26 +1,30 @@
 import React, {useEffect} from 'react';
 import {connect} from 'react-redux';
 import Card from 'react-bootstrap/Card';
+import {RouteComponentProps, withRouter} from 'react-router-dom';
 
 import Errors from '../components/layout/Errors';
 import Comments from '../components/Comments';
 import {IPost, IError, IStoreState} from '../types';
 import {getPost, deletePostError} from '../actions/post';
+import {ReturnButton} from '../components/layout/ReturnButton';
 
-interface IProps {
+type IProps = RouteComponentProps & {
     post: IPost;
     loading: boolean;
+    history: History;
     errors: IError[];
     match: {params: {id: string}};
     getPost: (id: string) => void;
     deletePostError: (id: string) => void;
-}
+};
 
 const Post: React.FC<IProps> = ({
     match,
     post,
     errors,
     loading,
+    history,
     getPost,
     deletePostError,
 }) => {
@@ -39,6 +43,7 @@ const Post: React.FC<IProps> = ({
     return (
         post && (
             <>
+                <ReturnButton onClick={() => history.push('/posts')} />
                 <Card className="post-card">
                     <Card>
                         <Card.Header>{post.title}</Card.Header>
@@ -61,4 +66,6 @@ const mapStateToProps = (state: any) => ({
     loading: state.post.loading,
 });
 
-export default connect(mapStateToProps, {getPost, deletePostError})(Post);
+export default connect(mapStateToProps, {getPost, deletePostError})(
+    withRouter(Post)
+);

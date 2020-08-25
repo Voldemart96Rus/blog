@@ -1,0 +1,10 @@
+.return-button {
+    cursor: pointer;
+    margin: 1rem 0;
+    width: 2rem;
+    opacity: 0.6;
+}
+
+.return-button:hover {
+    opacity: 1;
+}

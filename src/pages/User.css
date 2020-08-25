@@ -1,5 +1,5 @@
 .user-card {
-    width: fit-content;
+    width: 28rem;
 }
 
 .user-card-header {
@@ -11,6 +11,7 @@
     width: 2rem;
     height: 2rem;
     margin-right: 3rem;
+    flex-shrink: 0;
 }
 
 .username {
