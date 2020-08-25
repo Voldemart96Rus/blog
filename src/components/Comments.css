@@ -1,0 +1,10 @@
+.user-icon {
+    width: 2rem;
+    height: 2rem;
+}
+
+.comment-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}

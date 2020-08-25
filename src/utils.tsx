@@ -1,11 +1,11 @@
 import React from 'react';
 import Pagination from 'react-bootstrap/Pagination';
 
-// interface IPaginationItems {
-//     pages: number;
-//     activePage: number;
-//     setActivePage: (page: number) => void;
-// }
+import {
+    PAGE_GROUP_LENGTH,
+    PAGE_SUBGROUP_LENGTH,
+    PAGE_MAX_GROUP_LENGTH,
+} from './constants';
 
 export const getPaginationItems = (
     pages: number,
@@ -14,10 +14,8 @@ export const getPaginationItems = (
 ) => {
     const paginationItems = [];
     const takenPageNumbers = [];
-    const PAGE_GROUP_LENGTH = 7;
-    const PAGE_SUBGROUP_LENGTH = (PAGE_GROUP_LENGTH - 1) / 2;
 
-    if (1 <= pages && pages <= 13) {
+    if (1 <= pages && pages <= PAGE_MAX_GROUP_LENGTH) {
         for (let i = 1; i <= pages; i++) {
             paginationItems.push(
                 <Pagination.Item
@@ -33,7 +31,6 @@ export const getPaginationItems = (
         return paginationItems;
     }
 
-    // todo to constants
     for (
         let i = activePage - PAGE_SUBGROUP_LENGTH;
         i <= activePage + PAGE_SUBGROUP_LENGTH;
@@ -97,21 +94,23 @@ export const getPaginationItems = (
 
     if (!takenPageNumbers.includes(1)) {
         paginationItems.unshift(
-            <Pagination.Item onClick={() => setActivePage(1)}>
+            <Pagination.Item key={1} onClick={() => setActivePage(1)}>
                 1
             </Pagination.Item>
         );
 
         if (leftmostPageNumber > 2) {
-            paginationItems.splice(1, 0, <Pagination.Ellipsis />);
+            paginationItems.splice(
+                1,
+                0,
+                <Pagination.Ellipsis key={pages + 1} />
+            );
         }
     }
 
     if (!takenPageNumbers.includes(pages)) {
         if (pages - rightmostPageNumber > 1) {
-            paginationItems.push(
-                <Pagination.Ellipsis key={Date.now().valueOf()} />
-            );
+            paginationItems.push(<Pagination.Ellipsis key={pages + 2} />);
         }
 
         paginationItems.push(

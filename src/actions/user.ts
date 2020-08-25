@@ -1,8 +1,9 @@
+import {Dispatch} from 'react';
+
 import {BASE_URL} from '../constants';
 import {
     GET_USER,
     GET_USERS,
-    SET_LOADING,
     CLEAN_USERS,
     SET_USERS_PAGE,
     SetLoadingAction,
@@ -11,12 +12,13 @@ import {
     GetUsersAction,
     SetUsersPageAction,
 } from '../types';
-import {Dispatch} from 'react';
+
+import {setLoading} from './app';
 
 export const getUsers = (page: number) => (
     dispatch: Dispatch<SetLoadingAction | GetUsersAction>
 ) => {
-    dispatch(setLoading);
+    dispatch(setLoading());
 
     const url = `${BASE_URL}/users?page=${page}`;
 
@@ -35,13 +37,16 @@ export const getUsers = (page: number) => (
                 },
             });
         })
-        .catch((error) => console.error(error));
+        .catch((error) => {
+            dispatch(setLoading(false));
+            console.error(error);
+        });
 };
 
 export const getUser = (id: string) => (
     dispatch: Dispatch<SetLoadingAction | GetUserAction>
 ) => {
-    dispatch(setLoading);
+    dispatch(setLoading());
 
     const url = `${BASE_URL}/users/${id}`;
 
@@ -53,7 +58,10 @@ export const getUser = (id: string) => (
                 payload: data,
             });
         })
-        .catch((error) => console.error(error));
+        .catch((error) => {
+            dispatch(setLoading(false));
+            console.error(error);
+        });
 };
 
 export const setUsersPage = (page: number) => (
@@ -67,7 +75,3 @@ export const setUsersPage = (page: number) => (
 
 export const cleanUsers = () => (dispatch: Dispatch<CleanUsersAction>) =>
     dispatch({type: CLEAN_USERS});
-
-const setLoading: SetLoadingAction = {
-    type: SET_LOADING,
-};

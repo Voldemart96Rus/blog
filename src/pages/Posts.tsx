@@ -37,7 +37,6 @@ const Posts: React.FC<PropType> = ({
         };
     }, [activePage, getPosts, cleanPosts]);
 
-    // <Preloader />
     return loading ? (
         <main>Loading...</main>
     ) : (
@@ -53,6 +52,7 @@ const Posts: React.FC<PropType> = ({
                     {posts.map((post: IPost, index: number) => (
                         <tr
                             key={post.id}
+                            className="cursor-pointer"
                             onClick={() => history.push(`/posts/${post.id}`)}
                         >
                             <td>
@@ -64,6 +64,7 @@ const Posts: React.FC<PropType> = ({
                 </tbody>
             </Table>
             {total > limit && (
+                // todo в отдельный компонент
                 <Pagination>
                     <Pagination.First onClick={() => setPostsPage(1)} />
                     <Pagination.Prev

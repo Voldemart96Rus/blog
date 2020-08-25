@@ -1,8 +1,10 @@
 import {
     GET_POST,
     GET_POSTS,
+    POST_ERROR,
     SET_LOADING,
     CLEAN_POSTS,
+    DELETE_POST_ERROR,
     SET_POSTS_PAGE,
     IPostState,
     PostActionTypes,
@@ -17,6 +19,7 @@ const initialState: IPostState = {
     },
     page: 1,
     post: null,
+    errors: [],
     loading: false,
 };
 
@@ -37,6 +40,13 @@ export default (state = initialState, action: PostActionTypes) => {
                 loading: false,
             };
         }
+        case POST_ERROR: {
+            return {
+                ...state,
+                errors: [action.payload, ...state.errors],
+                loading: false,
+            };
+        }
         case SET_POSTS_PAGE: {
             return {
                 ...state,
@@ -51,10 +61,16 @@ export default (state = initialState, action: PostActionTypes) => {
                 loading: false,
             };
         }
+        case DELETE_POST_ERROR: {
+            return {
+                ...state,
+                errors: state.errors.filter(({id}) => id !== action.payload),
+            };
+        }
         case SET_LOADING:
             return {
                 ...state,
-                loading: true,
+                loading: action.payload,
             };
         default:
             return state;

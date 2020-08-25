@@ -1,9 +1,10 @@
 import {
     GET_USER,
     GET_USERS,
+    USER_ERROR,
     SET_LOADING,
-    SET_USERS_PAGE,
     CLEAN_USERS,
+    SET_USERS_PAGE,
     IUserState,
     UserActionTypes,
 } from '../types';
@@ -17,6 +18,7 @@ const initialState: IUserState = {
         pages: 0,
         limit: 20,
     },
+    errors: [],
     loading: false,
 };
 
@@ -37,6 +39,13 @@ export default (state = initialState, action: UserActionTypes) => {
                 loading: false,
             };
         }
+        case USER_ERROR: {
+            return {
+                ...state,
+                errors: [action.payload, ...state.errors],
+                loading: false,
+            };
+        }
         case SET_USERS_PAGE: {
             return {
                 ...state,
@@ -54,7 +63,7 @@ export default (state = initialState, action: UserActionTypes) => {
         case SET_LOADING:
             return {
                 ...state,
-                loading: true,
+                loading: action.payload,
             };
         default:
             return state;

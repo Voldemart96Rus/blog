@@ -9,6 +9,7 @@ import {IUser, IStoreState, IPagination} from '../types';
 import {getUsers, cleanUsers, setUsersPage} from '../actions/user';
 import {getPaginationItems} from '../utils';
 
+// все аналогично posts
 type PropType = RouteComponentProps & {
     users: IUser[];
     pagination: IPagination;
@@ -53,6 +54,7 @@ const Users: React.FC<PropType> = ({
                     {users.map((user: IUser, index: number) => (
                         <tr
                             key={user.id}
+                            className="cursor-pointer"
                             onClick={() => history.push(`/users/${user.id}`)}
                         >
                             <td>
@@ -65,6 +67,7 @@ const Users: React.FC<PropType> = ({
                 </tbody>
             </Table>
             {total > limit && (
+                // todo в отдельный компонент
                 <Pagination>
                     <Pagination.First onClick={() => setUsersPage(1)} />
                     <Pagination.Prev
