@@ -9,39 +9,24 @@ import Preloader from '../components/layout/Preloader';
 import ReturnButton from '../components/layout/ReturnButton';
 import {IExtendedUser, IError, IPagination, IStoreState} from '../types';
 import {getUser, deleteUserError, setUserPostsAndPage} from '../actions/user';
-import PostsTable from '../components/layout/PostsTable';
+import PostsTable from '../components/PostsTable';
 import CustomPagination from '../components/layout/CustomPagination';
 import './User.css';
 
-type IProps = RouteComponentProps & {
-    user: IExtendedUser;
+interface IMatchParams {
+    id: string;
+}
+
+interface IProps extends RouteComponentProps<IMatchParams> {
+    user: IExtendedUser | null;
     loading: boolean;
     errors: IError[];
-    history: History;
-    match: {params: {id: string}};
     pagination: IPagination;
     activePage: number;
     getUser: (id: string) => void;
     deleteUserError: (id: string) => void;
     setUserPostsAndPage: (userId: string, page: number) => void;
-};
-
-// todo switch
-const STATUS_MAP: any = {
-    Inactive: {
-        text: 'Офлайн',
-        variant: 'danger',
-    },
-    Active: {
-        text: 'Онлайн',
-        variant: 'success',
-    },
-};
-
-const GENDER_MAP: any = {
-    Male: 'Мужской',
-    Female: 'Женский',
-};
+}
 
 const User: React.FC<IProps> = ({
     match,
@@ -60,26 +45,18 @@ const User: React.FC<IProps> = ({
     }, [getUser, match.params.id]);
 
     const setActivePage = (page: number): void => {
-        setUserPostsAndPage(user.id, page);
+        if (user) setUserPostsAndPage(user.id, page);
     };
-
-    if (errors.length) {
-        return (
-            <>
-                <ReturnButton onClick={() => history.push('/users')} />
-                <Errors errors={errors} deleteError={deleteUserError} />;
-            </>
-        );
-    }
 
     if (loading) {
         return <Preloader />;
     }
 
     return (
-        user && (
-            <>
-                <ReturnButton onClick={() => history.push('/users')} />
+        <main className="main">
+            <ReturnButton onClick={() => history.push('/users')} />
+            <Errors errors={errors} deleteError={deleteUserError} />
+            {user && (
                 <Card className="user-card">
                     <Card.Header className="user-card-header">
                         <img
@@ -90,9 +67,11 @@ const User: React.FC<IProps> = ({
                         <span className="username">{user.name}</span>
                         <Badge
                             className="user-status"
-                            variant={STATUS_MAP[user.status].variant}
+                            variant={
+                                user.status === 'Active' ? 'success' : 'danger'
+                            }
                         >
-                            {STATUS_MAP[user.status].text}
+                            {user.status}
                         </Badge>
                     </Card.Header>
                     <Card.Body>
@@ -108,37 +87,42 @@ const User: React.FC<IProps> = ({
                                     <dt className="user-definition-term mr-3">
                                         Пол:
                                     </dt>
-                                    <dd>{GENDER_MAP[user.gender]}</dd>
+                                    <dd>
+                                        {user.gender === 'Male'
+                                            ? 'Мужчина'
+                                            : 'Женщина'}
+                                    </dd>
                                 </div>
                             </dl>
                         </Card.Text>
                     </Card.Body>
                 </Card>
-                {user.posts && (
-                    <section className="my-5">
-                        <h2>Посты пользователя {user.name}</h2>
-                        <PostsTable
-                            posts={user.posts}
+            )}
+            {user && user.posts && user.posts.length > 0 && (
+                <section className="my-4">
+                    <h2 className="h4 mb-3">Посты пользователя {user.name}</h2>
+                    <PostsTable
+                        posts={user.posts}
+                        activePage={activePage}
+                        onClick={(id: string) => history.push(`/posts/${id}`)}
+                    />
+                    {total > limit && (
+                        <CustomPagination
+                            pages={pages}
                             activePage={activePage}
-                            onClick={(id: string) =>
-                                history.push(`/posts/${id}`)
-                            }
+                            setActivePage={setActivePage}
                         />
-                        {total > limit && (
-                            <CustomPagination
-                                pages={pages}
-                                activePage={activePage}
-                                setActivePage={setActivePage}
-                            />
-                        )}
-                    </section>
-                )}
-            </>
-        )
+                    )}
+                </section>
+            )}
+            {user && user.posts && user.posts.length === 0 && (
+                <h2 className="h4 my-4">У {user.name} нет постов</h2>
+            )}
+        </main>
     );
 };
 
-const mapStateToProps = (state: any) => ({
+const mapStateToProps = (state: IStoreState) => ({
     user: state.user.user,
     activePage: state.user.postsPage,
     pagination: state.user.postPagination,

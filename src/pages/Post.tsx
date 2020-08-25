@@ -1,7 +1,7 @@
 import React, {useEffect} from 'react';
 import {connect} from 'react-redux';
+import {RouteComponentProps} from 'react-router-dom';
 import Card from 'react-bootstrap/Card';
-import {RouteComponentProps, withRouter} from 'react-router-dom';
 
 import Errors from '../components/layout/Errors';
 import Comments from '../components/Comments';
@@ -10,15 +10,17 @@ import Preloader from '../components/layout/Preloader';
 import {IPost, IError, IStoreState} from '../types';
 import {getPost, deletePostError} from '../actions/post';
 
-type IProps = RouteComponentProps & {
-    post: IPost;
+interface IMatchParams {
+    id: string;
+}
+
+interface IProps extends RouteComponentProps<IMatchParams> {
+    post: IPost | null;
     loading: boolean;
-    history: History;
     errors: IError[];
-    match: {params: {id: string}};
     getPost: (id: string) => void;
     deletePostError: (id: string) => void;
-};
+}
 
 const Post: React.FC<IProps> = ({
     match,
@@ -33,45 +35,35 @@ const Post: React.FC<IProps> = ({
         getPost(match.params.id);
     }, [getPost, match.params.id]);
 
-    if (errors.length) {
-        return (
-            <>
-                <ReturnButton onClick={() => history.push('/posts')} />
-                <Errors errors={errors} deleteError={deletePostError} />
-            </>
-        );
-    }
-
     if (loading) {
         return <Preloader />;
     }
 
     return (
-        post && (
-            <>
-                <ReturnButton onClick={() => history.push('/posts')} />
+        <main className="main">
+            <ReturnButton onClick={() => history.push('/posts')} />
+            <Errors errors={errors} deleteError={deletePostError} />
+            {post && (
                 <Card className="post-card">
-                    <Card>
-                        <Card.Header>{post.title}</Card.Header>
-                        <Card.Body>
-                            <blockquote className="blockquote mb-0">
-                                <p>{post.body}</p>
-                            </blockquote>
-                        </Card.Body>
-                    </Card>
+                    <Card.Header>{post.title}</Card.Header>
+                    <Card.Body>
+                        <blockquote className="blockquote mb-0">
+                            <p>{post.body}</p>
+                        </blockquote>
+                    </Card.Body>
                 </Card>
-                {post.comments && <Comments />}
-            </>
-        )
+            )}
+            {post && post.comments && <Comments />}
+        </main>
     );
 };
+// todo history
+//todo test errors
 
-const mapStateToProps = (state: any) => ({
+const mapStateToProps = (state: IStoreState) => ({
     post: state.post.post,
     errors: state.post.errors,
     loading: state.post.loading,
 });
 
-export default connect(mapStateToProps, {getPost, deletePostError})(
-    withRouter(Post)
-);
+export default connect(mapStateToProps, {getPost, deletePostError})(Post);

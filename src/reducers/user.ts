@@ -1,3 +1,4 @@
+import {INITIAL_PAGINATION_STATE} from '../constants';
 import {
     GET_USER,
     GET_USERS,
@@ -10,7 +11,6 @@ import {
     IUserState,
     UserActionTypes,
 } from '../types';
-import {INITIAL_PAGINATION_STATE} from '../constants';
 
 const initialState: IUserState = {
     users: [],
@@ -66,6 +66,8 @@ export default (state = initialState, action: UserActionTypes) => {
             return {
                 ...state,
                 users: [],
+                user: null,
+                errors: [],
                 loading: false,
             };
         }

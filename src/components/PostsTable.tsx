@@ -1,7 +1,7 @@
 import React from 'react';
 import Table from 'react-bootstrap/Table';
 
-import {IPost} from '../../types';
+import {IPost} from '../types';
 
 type PropType = {
     posts: IPost[];

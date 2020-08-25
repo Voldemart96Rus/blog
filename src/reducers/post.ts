@@ -1,3 +1,4 @@
+import {INITIAL_PAGINATION_STATE} from '../constants';
 import {
     GET_POST,
     GET_POSTS,
@@ -10,7 +11,6 @@ import {
     IPostState,
     PostActionTypes,
 } from '../types';
-import {INITIAL_PAGINATION_STATE} from '../constants';
 
 const initialState: IPostState = {
     posts: [],
@@ -66,6 +66,8 @@ export default (state = initialState, action: PostActionTypes) => {
             return {
                 ...state,
                 posts: [],
+                post: null,
+                errors: [],
                 loading: false,
             };
         }

@@ -1,5 +1,7 @@
 export const SET_LOADING = 'SET_LOADING';
 export const SET_TOKEN = 'SET_TOKEN';
+export const SET_ALERT = 'SET_ALERT';
+export const REMOVE_ALERT = 'REMOVE_ALERT';
 
 export const GET_POST = 'GET_POST';
 export const GET_POSTS = 'GET_POSTS';
@@ -25,6 +27,11 @@ export interface IPost {
     created_at: string;
     updated_at: string;
     comments?: IComment[];
+}
+
+export interface IPostFields {
+    title: string;
+    body: string;
 }
 
 export interface IUser {
@@ -54,6 +61,12 @@ export interface IError {
     message: string;
 }
 
+export interface IAlert {
+    id: string;
+    message: string;
+    link: string;
+}
+
 export interface IPagination {
     total: number;
     pages: number;
@@ -73,7 +86,7 @@ export interface IPostState {
 
 export interface IUserState {
     users: IUser[];
-    user: IUser | null;
+    user: IExtendedUser | null;
     page: number;
     pagination: IPagination;
     errors: IError[];
@@ -86,10 +99,15 @@ export interface IAuthState {
     token: string | null;
 }
 
+export interface IAlertState {
+    alerts: IAlert[];
+}
+
 export interface IStoreState {
     post: IPostState;
     user: IUserState;
     auth: IAuthState;
+    alert: IAlertState;
 }
 
 export interface IComment {
@@ -173,6 +191,16 @@ export interface DeletePostErrorAction {
     payload: string;
 }
 
+export interface SetAlertAction {
+    type: typeof SET_ALERT;
+    payload: IAlert;
+}
+
+export interface RemoveAlertAction {
+    type: typeof REMOVE_ALERT;
+    payload: string;
+}
+
 export interface SetCommentsAndPageAction {
     type: typeof SET_COMMENTS_AND_PAGE;
     payload: {
@@ -208,5 +236,7 @@ export type PostActionTypes =
     | DeletePostErrorAction
     | SetPostsPageAction
     | SetCommentsAndPageAction;
+
+export type AlertActionTypes = SetAlertAction | RemoveAlertAction;
 
 export type AuthActionTypes = SetTokenAction;

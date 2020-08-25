@@ -47,40 +47,43 @@ const Users: React.FC<PropType> = ({
         };
     }, [activePage, getUsers, cleanUsers]);
 
-    if (errors.length) {
-        return <Errors errors={errors} deleteError={deleteUserError} />;
-    }
-
     if (loading) {
         return <Preloader />;
     }
 
     return (
-        <main className="main">
-            <Table striped bordered hover variant="light">
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>Имя</th>
-                        <th>Email</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {users.map((user: IUser, index: number) => (
-                        <tr
-                            key={user.id}
-                            className="cursor-pointer"
-                            onClick={() => history.push(`/users/${user.id}`)}
-                        >
-                            <td>
-                                {index + (activePage - 1) * users.length + 1}
-                            </td>
-                            <td>{user.name}</td>
-                            <td>{user.email}</td>
+        <main className="main paginated-page">
+            <Errors errors={errors} deleteError={deleteUserError} />
+            {users.length > 0 && (
+                <Table striped bordered hover variant="light">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Имя</th>
+                            <th>Email</th>
                         </tr>
-                    ))}
-                </tbody>
-            </Table>
+                    </thead>
+                    <tbody>
+                        {users.map((user: IUser, index: number) => (
+                            <tr
+                                key={user.id}
+                                className="cursor-pointer"
+                                onClick={() =>
+                                    history.push(`/users/${user.id}`)
+                                }
+                            >
+                                <td>
+                                    {index +
+                                        (activePage - 1) * users.length +
+                                        1}
+                                </td>
+                                <td>{user.name}</td>
+                                <td>{user.email}</td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </Table>
+            )}
             {total > limit && (
                 <CustomPagination
                     pages={pages}

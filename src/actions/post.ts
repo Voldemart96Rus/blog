@@ -10,6 +10,7 @@ import {
     DELETE_POST_ERROR,
     SET_POSTS_PAGE,
     SET_COMMENTS_AND_PAGE,
+    IPostFields,
     SetLoadingAction,
     CleanPostsAction,
     GetPostAction,
@@ -18,8 +19,11 @@ import {
     SetPostsPageAction,
     SetCommentsAndPageAction,
     DeletePostErrorAction,
+    SetAlertAction,
 } from '../types';
 import {setLoading} from './app';
+import {setAlert} from './alert';
+import store from '../store';
 
 export const getPosts = (page: number) => (
     dispatch: Dispatch<SetLoadingAction | GetPostsAction | PostErrorAction>
@@ -98,6 +102,51 @@ export const getPost = (id: string) => (
                             });
                         }
                     });
+            }
+        })
+        .catch((error) => {
+            dispatch({
+                type: POST_ERROR,
+                payload: {
+                    id: uuidv4(),
+                    ...SERVER_ERROR,
+                },
+            });
+            console.error(error);
+        });
+};
+
+export const createPost = (post: IPostFields) => (
+    dispatch: Dispatch<
+        SetLoadingAction | GetPostsAction | SetAlertAction | PostErrorAction
+    >
+) => {
+    const {token} = store.getState().auth;
+    const url = `${BASE_URL}/posts`;
+
+    fetch(url, {
+        method: 'POST',
+        headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({user: 'user', user_id: '1', ...post}),
+    })
+        .then((res) => res.json())
+        .then(({code, data}) => {
+            if (code >= 400) {
+                dispatch({
+                    type: POST_ERROR,
+                    payload: {id: uuidv4(), code, message: data.message},
+                });
+            } else {
+                dispatch(
+                    setAlert({
+                        id: uuidv4(),
+                        message: 'Новый пост создан',
+                        link: `/posts/${data.id}`,
+                    })
+                );
             }
         })
         .catch((error) => {

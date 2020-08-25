@@ -28,9 +28,9 @@ export const getUsers = (page: number) => (
 ) => {
     dispatch(setLoading());
 
-    const userURL = `${BASE_URL}/users?page=${page}`;
+    const url = `${BASE_URL}/users?page=${page}`;
 
-    fetch(userURL)
+    fetch(url)
         .then((res) => res.json())
         .then(({code, meta, data}) => {
             if (code >= 400) {

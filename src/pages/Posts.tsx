@@ -6,7 +6,7 @@ import {RouteComponentProps, withRouter} from 'react-router-dom';
 import Errors from '../components/layout/Errors';
 import Preloader from '../components/layout/Preloader';
 import CustomPagination from '../components/layout/CustomPagination';
-import PostsTable from '../components/layout/PostsTable';
+import PostsTable from '../components/PostsTable';
 import {IPost, IError, IStoreState, IPagination} from '../types';
 import {
     getPosts,
@@ -58,12 +58,15 @@ const Posts: React.FC<PropType> = ({
     }
 
     return (
-        <main className="main">
-            <PostsTable
-                posts={posts}
-                activePage={activePage}
-                onClick={onPostClick}
-            />
+        <main className="main paginated-page">
+            <Errors errors={errors} deleteError={deletePostError} />
+            {posts.length > 0 && (
+                <PostsTable
+                    posts={posts}
+                    activePage={activePage}
+                    onClick={onPostClick}
+                />
+            )}
             {total > limit && (
                 <CustomPagination
                     pages={pages}

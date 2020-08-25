@@ -1,0 +1,10 @@
+.brand {
+    display: flex;
+    align-items: center;
+    font-weight: 500;
+    color: #4949e7 !important;
+}
+
+.brand-icon {
+    width: 1rem;
+}

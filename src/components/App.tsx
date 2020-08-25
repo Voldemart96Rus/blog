@@ -13,30 +13,26 @@ import Users from '../pages/Users';
 import Posts from '../pages/Posts';
 import User from '../pages/User';
 import Post from '../pages/Post';
+import CreatePost from '../pages/CreatePost';
 import NotFound from '../pages/NotFound';
 import Header from './layout/Header';
 import './App.css';
 
-const App: React.FC = () => {
-    return (
-        <Router>
-            <Header />
-            <Container className="page-container">
-                <Switch>
-                    <Route
-                        exact
-                        path="/"
-                        render={() => <Redirect to="/users" />}
-                    />
-                    <Route exact path="/users" component={Users} />
-                    <Route exact path="/posts" component={Posts} />
-                    <Route exact path="/users/:id" component={User} />
-                    <Route exact path="/posts/:id" component={Post} />
-                    <Route component={NotFound} />
-                </Switch>
-            </Container>
-        </Router>
-    );
-};
+const App: React.FC = () => (
+    <Router>
+        <Header />
+        <Container className="page-container">
+            <Switch>
+                <Route exact path="/" render={() => <Redirect to="/users" />} />
+                <Route exact path="/users" component={Users} />
+                <Route exact path="/posts" component={Posts} />
+                <Route exact path="/users/:id" component={User} />
+                <Route exact path="/posts/:id" component={Post} />
+                <Route exact path="/create-post" component={CreatePost} />
+                <Route component={NotFound} />
+            </Switch>
+        </Container>
+    </Router>
+);
 
 export default connect(null, null)(App);
