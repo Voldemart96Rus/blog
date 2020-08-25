@@ -11,7 +11,7 @@ interface IProps {
     removeAlert: (id: string) => void;
 }
 
-const Alerts: React.FC<IProps> = ({alerts}) => {
+const Alerts: React.FC<IProps> = ({alerts, removeAlert}) => {
     if (alerts && alerts.length > 0)
         return (
             <>

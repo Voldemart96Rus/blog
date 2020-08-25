@@ -1,6 +1,7 @@
 import React, {useEffect} from 'react';
 import {connect} from 'react-redux';
 import {RouteComponentProps} from 'react-router-dom';
+import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
 
 import Errors from '../components/layout/Errors';
@@ -51,14 +52,24 @@ const Post: React.FC<IProps> = ({
                             <p>{post.body}</p>
                         </blockquote>
                     </Card.Body>
+                    <Card.Footer>
+                        <Button
+                            onClick={() =>
+                                history.push(
+                                    `/create-or-edit-post?post_id=${post.id}`
+                                )
+                            }
+                            variant="dark"
+                        >
+                            Редактировать
+                        </Button>
+                    </Card.Footer>
                 </Card>
             )}
             {post && post.comments && <Comments />}
         </main>
     );
 };
-// todo history
-//todo test errors
 
 const mapStateToProps = (state: IStoreState) => ({
     post: state.post.post,

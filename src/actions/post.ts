@@ -161,6 +161,51 @@ export const createPost = (post: IPostFields) => (
         });
 };
 
+export const updatePost = (post: IPostFields) => (
+    dispatch: Dispatch<
+        SetLoadingAction | GetPostsAction | SetAlertAction | PostErrorAction
+    >
+) => {
+    const {token} = store.getState().auth;
+    const url = `${BASE_URL}/posts/${post.id}`;
+
+    fetch(url, {
+        method: 'PUT',
+        headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({...post}),
+    })
+        .then((res) => res.json())
+        .then(({code, data}) => {
+            if (code >= 400) {
+                dispatch({
+                    type: POST_ERROR,
+                    payload: {id: uuidv4(), code, message: data.message},
+                });
+            } else {
+                dispatch(
+                    setAlert({
+                        id: uuidv4(),
+                        message: 'Пост отредактирован',
+                        link: `/posts/${data.id}`,
+                    })
+                );
+            }
+        })
+        .catch((error) => {
+            dispatch({
+                type: POST_ERROR,
+                payload: {
+                    id: uuidv4(),
+                    ...SERVER_ERROR,
+                },
+            });
+            console.error(error);
+        });
+};
+
 export const deletePostError = (id: string) => (
     dispatch: Dispatch<DeletePostErrorAction>
 ) =>

@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {History} from 'history'; //todo
+import {History} from 'history';
 import {RouteComponentProps, withRouter} from 'react-router-dom';
 import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
@@ -51,8 +51,8 @@ const Header: React.FC<PropType> = ({history}) => {
                                 Посты
                             </Nav.Link>
                             <Nav.Link
-                                href="/create-post"
-                                className={setActive('/create-post')}
+                                href="/create-or-edit-post"
+                                className={setActive('/create-or-edit-post')}
                             >
                                 Новый пост
                             </Nav.Link>

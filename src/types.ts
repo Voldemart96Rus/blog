@@ -30,6 +30,7 @@ export interface IPost {
 }
 
 export interface IPostFields {
+    id?: string;
     title: string;
     body: string;
 }
