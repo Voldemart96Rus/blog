@@ -1,7 +1,7 @@
 import {Dispatch} from 'react';
 import {v4 as uuidv4} from 'uuid';
 
-import {BASE_URL} from '../constants';
+import {BASE_URL, SERVER_ERROR} from '../constants';
 import {
     GET_POSTS,
     GET_POST,
@@ -9,18 +9,20 @@ import {
     CLEAN_POSTS,
     DELETE_POST_ERROR,
     SET_POSTS_PAGE,
+    SET_COMMENTS_AND_PAGE,
     SetLoadingAction,
     CleanPostsAction,
     GetPostAction,
     GetPostsAction,
     PostErrorAction,
     SetPostsPageAction,
+    SetCommentsAndPageAction,
     DeletePostErrorAction,
 } from '../types';
 import {setLoading} from './app';
 
 export const getPosts = (page: number) => (
-    dispatch: Dispatch<SetLoadingAction | GetPostsAction>
+    dispatch: Dispatch<SetLoadingAction | GetPostsAction | PostErrorAction>
 ) => {
     dispatch(setLoading());
 
@@ -28,14 +30,27 @@ export const getPosts = (page: number) => (
 
     fetch(url)
         .then((res) => res.json())
-        .then(({meta: {pagination}, data}) => {
-            dispatch({
-                type: GET_POSTS,
-                payload: {pagination, posts: data},
-            });
+        .then(({code, meta, data}) => {
+            if (code >= 400) {
+                dispatch({
+                    type: POST_ERROR,
+                    payload: {id: uuidv4(), code, message: data.message},
+                });
+            } else {
+                dispatch({
+                    type: GET_POSTS,
+                    payload: {pagination: meta.pagination, posts: data},
+                });
+            }
         })
         .catch((error) => {
-            dispatch(setLoading(false));
+            dispatch({
+                type: POST_ERROR,
+                payload: {
+                    id: uuidv4(),
+                    ...SERVER_ERROR,
+                },
+            });
             console.error(error);
         });
 };
@@ -45,14 +60,13 @@ export const getPost = (id: string) => (
 ) => {
     dispatch(setLoading());
 
-    const postUrl = `${BASE_URL}/posts/${id}`;
+    const postURL = `${BASE_URL}/posts/${id}`;
     const commentsUrl = `${BASE_URL}/comments?post_id=${id}`;
-    let post = null;
 
-    fetch(postUrl)
+    fetch(postURL)
         .then((res) => res.json())
         .then(({code, data: postData}) => {
-            if (code !== 200) {
+            if (code >= 400) {
                 dispatch({
                     type: POST_ERROR,
                     payload: {id: uuidv4(), code, message: postData.message},
@@ -60,8 +74,8 @@ export const getPost = (id: string) => (
             } else {
                 fetch(commentsUrl)
                     .then((res) => res.json())
-                    .then(({code, data: commentData}) => {
-                        if (code !== 200) {
+                    .then(({code, meta, data: commentData}) => {
+                        if (code >= 400) {
                             dispatch({
                                 type: GET_POST,
                                 payload: postData,
@@ -77,15 +91,23 @@ export const getPost = (id: string) => (
                         } else {
                             dispatch({
                                 type: GET_POST,
-                                payload: {...postData, comments: commentData},
+                                payload: {
+                                    post: {...postData, comments: commentData},
+                                    commentPagination: meta.pagination,
+                                },
                             });
                         }
                     });
             }
         })
         .catch((error) => {
-            dispatch(setLoading(false));
-            // todo dispatch error
+            dispatch({
+                type: POST_ERROR,
+                payload: {
+                    id: uuidv4(),
+                    ...SERVER_ERROR,
+                },
+            });
             console.error(error);
         });
 };
@@ -105,6 +127,42 @@ export const setPostsPage = (page: number) => (
         type: SET_POSTS_PAGE,
         payload: page,
     });
+};
+
+export const setCommentsAndPage = (postId: string, page: number) => (
+    dispatch: Dispatch<
+        SetCommentsAndPageAction | SetLoadingAction | PostErrorAction
+    >
+) => {
+    dispatch(setLoading());
+
+    const url = `${BASE_URL}/posts/${postId}/comments?page=${page}`;
+
+    fetch(url)
+        .then((res) => res.json())
+        .then(({code, data}) => {
+            if (code >= 400) {
+                dispatch({
+                    type: POST_ERROR,
+                    payload: {id: uuidv4(), code, message: data.message},
+                });
+            } else {
+                dispatch({
+                    type: SET_COMMENTS_AND_PAGE,
+                    payload: {page, comments: data},
+                });
+            }
+        })
+        .catch((error) => {
+            dispatch({
+                type: POST_ERROR,
+                payload: {
+                    id: uuidv4(),
+                    ...SERVER_ERROR,
+                },
+            });
+            console.error(error);
+        });
 };
 
 export const cleanPosts = () => (dispatch: Dispatch<CleanPostsAction>) =>

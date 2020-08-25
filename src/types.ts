@@ -14,6 +14,8 @@ export const CLEAN_USERS = 'CLEAN_USERS';
 export const USER_ERROR = 'USER_ERROR';
 export const DELETE_USER_ERROR = 'DELETE_USER_ERROR';
 export const SET_USERS_PAGE = 'SET_USERS_PAGE';
+export const SET_COMMENTS_AND_PAGE = 'SET_COMMENTS_AND_PAGE';
+export const SET_USER_POSTS_AND_PAGE = 'SET_USER_POSTS_AND_PAGE';
 
 export interface IPost {
     id: string;
@@ -29,8 +31,12 @@ export interface IUser {
     id: string;
     name: string;
     email: string;
-    gender?: string;
-    status?: string;
+}
+
+export interface IExtendedUser extends IUser {
+    gender: string;
+    status: string;
+    posts?: IPost[];
 }
 
 export interface IComment {
@@ -61,6 +67,8 @@ export interface IPostState {
     pagination: IPagination;
     errors: IError[];
     loading: boolean;
+    commentsPage: number;
+    commentPagination: IPagination;
 }
 
 export interface IUserState {
@@ -70,6 +78,8 @@ export interface IUserState {
     pagination: IPagination;
     errors: IError[];
     loading: boolean;
+    postsPage: number;
+    postPagination: IPagination;
 }
 
 export interface IAuthState {
@@ -82,9 +92,19 @@ export interface IStoreState {
     auth: IAuthState;
 }
 
+export interface IComment {
+    id: string;
+    name: string;
+    body: string;
+    created_at: string;
+}
+
 export interface GetUserAction {
     type: typeof GET_USER;
-    payload: IUser;
+    payload: {
+        user: IExtendedUser;
+        postPagination: IPagination;
+    };
 }
 
 export interface GetUsersAction {
@@ -94,7 +114,10 @@ export interface GetUsersAction {
 
 export interface GetPostAction {
     type: typeof GET_POST;
-    payload: IPost;
+    payload: {
+        post: IPost;
+        commentPagination: IPagination;
+    };
 }
 
 export interface GetPostsAction {
@@ -150,6 +173,22 @@ export interface DeletePostErrorAction {
     payload: string;
 }
 
+export interface SetCommentsAndPageAction {
+    type: typeof SET_COMMENTS_AND_PAGE;
+    payload: {
+        page: number;
+        comments: IComment[];
+    };
+}
+
+export interface SetUserPostsAndPageAction {
+    type: typeof SET_USER_POSTS_AND_PAGE;
+    payload: {
+        page: number;
+        posts: IPost[];
+    };
+}
+
 export type UserActionTypes =
     | GetUserAction
     | GetUsersAction
@@ -157,7 +196,8 @@ export type UserActionTypes =
     | CleanUsersAction
     | SetLoadingAction
     | DeleteUserErrorAction
-    | SetUsersPageAction;
+    | SetUsersPageAction
+    | SetUserPostsAndPageAction;
 
 export type PostActionTypes =
     | GetPostAction
@@ -166,6 +206,7 @@ export type PostActionTypes =
     | CleanPostsAction
     | SetLoadingAction
     | DeletePostErrorAction
-    | SetPostsPageAction;
+    | SetPostsPageAction
+    | SetCommentsAndPageAction;
 
 export type AuthActionTypes = SetTokenAction;

@@ -1,5 +1,6 @@
 .user-card {
     width: 28rem;
+    max-width: 100%;
 }
 
 .user-card-header {

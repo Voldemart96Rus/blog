@@ -44,6 +44,7 @@ const Header: React.FC<PropType> = ({history, token, setToken}) => {
         <header className="fixed-top">
             <Navbar bg="light" expand="lg">
                 <Container>
+                    {/* todo logo */}
                     <Navbar.Brand href="/">Блог</Navbar.Brand>
                     <Navbar.Toggle aria-controls="basic-navbar-nav" />
                     <Navbar.Collapse id="basic-navbar-nav">

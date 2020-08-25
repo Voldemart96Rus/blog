@@ -4,20 +4,21 @@ import {
     USER_ERROR,
     SET_LOADING,
     CLEAN_USERS,
+    DELETE_USER_ERROR,
     SET_USERS_PAGE,
+    SET_USER_POSTS_AND_PAGE,
     IUserState,
     UserActionTypes,
 } from '../types';
+import {INITIAL_PAGINATION_STATE} from '../constants';
 
 const initialState: IUserState = {
     users: [],
-    user: null,
     page: 1,
-    pagination: {
-        total: 0,
-        pages: 0,
-        limit: 20,
-    },
+    postsPage: 1,
+    pagination: INITIAL_PAGINATION_STATE,
+    postPagination: INITIAL_PAGINATION_STATE,
+    user: null,
     errors: [],
     loading: false,
 };
@@ -35,7 +36,7 @@ export default (state = initialState, action: UserActionTypes) => {
         case GET_USER: {
             return {
                 ...state,
-                user: action.payload,
+                ...action.payload,
                 loading: false,
             };
         }
@@ -53,11 +54,25 @@ export default (state = initialState, action: UserActionTypes) => {
                 loading: false,
             };
         }
+        case SET_USER_POSTS_AND_PAGE: {
+            return {
+                ...state,
+                postPage: action.payload.page,
+                user: {...state.user, posts: action.payload.posts},
+                loading: false,
+            };
+        }
         case CLEAN_USERS: {
             return {
                 ...state,
                 users: [],
                 loading: false,
+            };
+        }
+        case DELETE_USER_ERROR: {
+            return {
+                ...state,
+                errors: state.errors.filter(({id}) => id !== action.payload),
             };
         }
         case SET_LOADING:

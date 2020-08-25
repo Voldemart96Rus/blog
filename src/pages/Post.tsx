@@ -5,9 +5,10 @@ import {RouteComponentProps, withRouter} from 'react-router-dom';
 
 import Errors from '../components/layout/Errors';
 import Comments from '../components/Comments';
+import ReturnButton from '../components/layout/ReturnButton';
+import Preloader from '../components/layout/Preloader';
 import {IPost, IError, IStoreState} from '../types';
 import {getPost, deletePostError} from '../actions/post';
-import {ReturnButton} from '../components/layout/ReturnButton';
 
 type IProps = RouteComponentProps & {
     post: IPost;
@@ -33,11 +34,16 @@ const Post: React.FC<IProps> = ({
     }, [getPost, match.params.id]);
 
     if (errors.length) {
-        return <Errors errors={errors} deleteError={deletePostError} />;
+        return (
+            <>
+                <ReturnButton onClick={() => history.push('/posts')} />
+                <Errors errors={errors} deleteError={deletePostError} />
+            </>
+        );
     }
 
     if (loading) {
-        return <div>Loading...</div>;
+        return <Preloader />;
     }
 
     return (
@@ -54,7 +60,7 @@ const Post: React.FC<IProps> = ({
                         </Card.Body>
                     </Card>
                 </Card>
-                {post.comments && <Comments comments={post.comments} />}
+                {post.comments && <Comments />}
             </>
         )
     );

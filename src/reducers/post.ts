@@ -6,18 +6,18 @@ import {
     CLEAN_POSTS,
     DELETE_POST_ERROR,
     SET_POSTS_PAGE,
+    SET_COMMENTS_AND_PAGE,
     IPostState,
     PostActionTypes,
 } from '../types';
+import {INITIAL_PAGINATION_STATE} from '../constants';
 
 const initialState: IPostState = {
     posts: [],
-    pagination: {
-        total: 0,
-        pages: 0,
-        limit: 20,
-    },
     page: 1,
+    commentsPage: 1,
+    pagination: INITIAL_PAGINATION_STATE,
+    commentPagination: INITIAL_PAGINATION_STATE,
     post: null,
     errors: [],
     loading: false,
@@ -25,18 +25,18 @@ const initialState: IPostState = {
 
 export default (state = initialState, action: PostActionTypes) => {
     switch (action.type) {
-        case GET_POST: {
-            return {
-                ...state,
-                post: action.payload,
-                loading: false,
-            };
-        }
         case GET_POSTS: {
             return {
                 ...state,
                 posts: action.payload.posts,
                 pagination: action.payload.pagination,
+                loading: false,
+            };
+        }
+        case GET_POST: {
+            return {
+                ...state,
+                ...action.payload,
                 loading: false,
             };
         }
@@ -51,6 +51,14 @@ export default (state = initialState, action: PostActionTypes) => {
             return {
                 ...state,
                 page: action.payload,
+                loading: false,
+            };
+        }
+        case SET_COMMENTS_AND_PAGE: {
+            return {
+                ...state,
+                commentsPage: action.payload.page,
+                post: {...state.post, posts: action.payload.comments},
                 loading: false,
             };
         }

@@ -3,31 +3,42 @@ import {History} from 'history';
 import {connect} from 'react-redux';
 import {RouteComponentProps, withRouter} from 'react-router-dom';
 
-import {IPost, IStoreState, IPagination} from '../types';
-import {getPosts, cleanPosts, setPostsPage} from '../actions/post';
+import Errors from '../components/layout/Errors';
+import Preloader from '../components/layout/Preloader';
 import CustomPagination from '../components/layout/CustomPagination';
 import PostsTable from '../components/layout/PostsTable';
+import {IPost, IError, IStoreState, IPagination} from '../types';
+import {
+    getPosts,
+    cleanPosts,
+    setPostsPage,
+    deletePostError,
+} from '../actions/post';
 
 type PropType = RouteComponentProps & {
     posts: IPost[];
     pagination: IPagination;
+    errors: IError[];
     loading: boolean;
     activePage: number;
     history: History;
     getPosts: (page: number) => void;
     cleanPosts: () => void;
     setPostsPage: (page: number) => void;
+    deletePostError: (id: string) => void;
 };
 
 const Posts: React.FC<PropType> = ({
     posts,
     loading,
     pagination: {total, pages, limit},
+    errors,
     history,
     activePage,
     getPosts,
     cleanPosts,
     setPostsPage,
+    deletePostError,
 }) => {
     useEffect(() => {
         getPosts(activePage);
@@ -38,9 +49,15 @@ const Posts: React.FC<PropType> = ({
 
     const onPostClick = (id: string) => history.push(`/posts/${id}`);
 
-    return loading ? (
-        <main>Loading...</main>
-    ) : (
+    if (errors.length) {
+        return <Errors errors={errors} deleteError={deletePostError} />;
+    }
+
+    if (loading) {
+        return <Preloader />;
+    }
+
+    return (
         <main className="main">
             <PostsTable
                 posts={posts}
@@ -61,10 +78,14 @@ const Posts: React.FC<PropType> = ({
 const mapStateToProps = (state: IStoreState) => ({
     posts: state.post.posts,
     loading: state.post.loading,
+    errors: state.post.errors,
     activePage: state.post.page,
     pagination: state.post.pagination,
 });
 
-export default connect(mapStateToProps, {getPosts, cleanPosts, setPostsPage})(
-    withRouter(Posts)
-);
+export default connect(mapStateToProps, {
+    getPosts,
+    cleanPosts,
+    setPostsPage,
+    deletePostError,
+})(withRouter(Posts));
